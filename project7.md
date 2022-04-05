@@ -156,8 +156,6 @@ sudo systemctl enable php-fpm
 sudo setsebool -P httpd_execmem 1
 ```
 
-### Repeat steps 1-5 for another 2 Web Servers.
-
 6. Verify that Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. If you see the same files – it means NFS is mounted correctly. You can try to create a new file touch test.txt from one server and check if the same file is accessible from other Web Servers.
 
 ![cornfirming the apache file and directory in webserver /var/www](./images/apache-dir-in-webserver.PNG) 
@@ -216,7 +214,7 @@ Set **SELINUX=disabled**
 
 ![webserver page](./images/page.PNG)
 
-10. Update the website’s configuration to connect to the database (in /var/www/html/functions.php file).
+10. Update the website’s configuration to connect to the database in(/var/www/html/functions.php file).
 
         'sudo vi /var/www/html/functions.php'
 
@@ -225,6 +223,8 @@ update the database user = webaccess, the password = onyeka12345, the private ip
  Apply tooling-db.sql script to your database using this command but first install mysql client and remember to run the command from **tooling** folder and open mysql port for the database server to the private ip address of the webserver
 
         'sudo yum install mysql'
+
+### Repeat steps 1-10 for another 2 Web Servers.
 
         'sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf'
 
