@@ -89,7 +89,7 @@ Check which port is used by NFS and open it using Security Groups (add new Inbou
 
 ![port number](./images/port-number.PNG)  
 
-Important note: In order for NFS server to be accessible from your client, you must also open following ports: TCP 111, UDP 111, UDP 2049
+Important note: In order for NFS server to be accessible from your client, you must also open following ports to the Subnet-CIDR of the web servers : TCP 111, UDP 111, UDP 2049, TCP 2049
 
 ## STEP 2 — CONFIGURE THE DATABASE SERVER
 
@@ -97,12 +97,24 @@ launch an ubuntu ec2 instance that will serve as db server
 
 Install MySQL server
 
+`sudo apt install mysql-server`
+
 Create a database and name it tooling
+
+`create database tooling;`
 
 Create a database user and name it webaccess with password 'onyeka12345'
 
+`CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345'`
+
 Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
 
+`grant all on tooling.* to 'webaccess'@'172.31.32.0/20';`
+
+`flush privileges`
+
+
+Remember to open the mysql port to the subnet cidr of the webservers
 ## Step 3 — Prepare the Web Servers
 
 We need to make sure that our Web Servers can serve the same content from shared storage solutions, in our case – NFS Server and MySQL database.
@@ -208,7 +220,7 @@ Check whether aoache is up and running with this command
 
         'sudo vi /etc/sysconfig/selinux'
 
-Set **SELINUX=disabled**
+Set **SELINUX=disabled**cd 
 
         'sudo systemctl restart httpd'
 
@@ -224,7 +236,11 @@ update the database user = webaccess, the password = onyeka12345, the private ip
 
         'sudo yum install mysql'
 
+        'mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql'
+
 ### Repeat steps 1-10 for another 2 Web Servers.
+
+### More to configure on the database
 
         'sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf'
 
@@ -232,7 +248,7 @@ update the database user = webaccess, the password = onyeka12345, the private ip
 
         'sudo systemctl restart mysql'
 
-        'mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql
+        
 
 11. Go back to the database terminal. Create in MySQL a new admin user with username: myuser and password: password:
 
@@ -249,10 +265,6 @@ update the database user = webaccess, the password = onyeka12345, the private ip
 
 
 ![tables in tooling](./images/mysql-db2.PNG)
-
-
-INSERT INTO ‘users’ (‘id’, ‘username’, ‘password’, ’email’, ‘user_type’, ‘status’) VALUES
--> (1, ‘myuser’, ‘5f4dcc3b5aa765d61d8327deb882cf99’, ‘user@mail.com’, ‘admin’, ‘1’);
 
 
 Open the website in your browser http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php and make sure you can login into the webste with user = admin, password = admin
