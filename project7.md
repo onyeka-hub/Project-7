@@ -111,7 +111,7 @@ Grant permission to webaccess user on tooling database to do anything only from 
 
 `grant all on tooling.* to 'webaccess'@'172.31.32.0/20';`
 
-`flush privileges`
+`flush privileges;`
 
 
 Remember to open the mysql port to the subnet cidr of the webservers
