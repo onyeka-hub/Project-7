@@ -195,7 +195,9 @@ sudo setsebool -P httpd_execmem 1
 
 7. Locate the log folder for Apache on the Web Server 
 
-        'sudo ls /var/log'
+```
+sudo ls /var/log
+```
 
 ![locating the log folder for apache on the web server](./images/webserver-log-httpd.PNG)
 
@@ -315,7 +317,7 @@ select * from users;
 ![tables in tooling](./images/mysql-db2.PNG)
 
 
-Open the website in your browser http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php and make sure you can login into the webste with user = admin, password = admin
+Open the website in your browser http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php and make sure you can login into the webste with user = admin, password = admin
 
 ![webserver page](./images/web-page.PNG)
 
