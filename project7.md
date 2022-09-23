@@ -184,7 +184,15 @@ and mount it to NFS server’s export for logs with the command below
 
 'sudo mount -t nfs -o rw,nosuid NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd'
 
-Repeat step №4 to make sure the mount point will persist after reboot.
+To make sure the mount point will persist after reboot.
+
+Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot:
+
+        'sudo vi /etc/fstab'
+
+add following line
+
+'NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd nfs defaults 0 0'
 
 8. Fork the tooling source code from 'Darey.io Github Account' to your Github account. You have to install git and initialise the repository before you can be able to fork.
 
