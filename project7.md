@@ -80,7 +80,7 @@ Make sure we set up permission that will allow our Web servers to read, write an
 ### Esc + :wq!
 
 ```
-sudo exportfs -arv`
+sudo exportfs -arv
 ```
 
 ![exporting the mounts](./images/exporting.PNG)  
@@ -88,7 +88,7 @@ sudo exportfs -arv`
 Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
 
 ```
-rpcinfo -p | grep nfs`
+rpcinfo -p | grep nfs
 ```
 
 ![port number](./images/port-number.PNG)  
@@ -102,19 +102,19 @@ launch an ubuntu ec2 instance that will serve as db server
 Install MySQL server
 
 ```
-sudo apt install mysql-server`
+sudo apt install mysql-server
 ```
 
 Create a database and name it tooling
 
 ```
-create database tooling;`
+create database tooling;
 ```
 
 Create a database user and name it webaccess with password 'onyeka12345'
 
 ```
-CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';`
+CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';
 ```
 
 Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
@@ -153,19 +153,25 @@ sudo yum install nfs-utils nfs4-acl-tools -y
 
 2. Mount /var/www/ and target the NFS server’s export for apps
 
-      'sudo mkdir /var/www'
+```
+sudo mkdir /var/www
 
-        'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www'
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+```
 
 ![nfs /mnt/apps mounte on webservers /var/www](./images/nfs-mounted-on-var-www.PNG)  
 
 3. Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot:
 
-        'sudo vi /etc/fstab'
+```
+sudo vi /etc/fstab
+```
 
 add following line
 
-'NFS-Server-Private-IP-Address:/mnt/apps /var/www nfs defaults 0 0'
+```
+NFS-Server-Private-IP-Address:/mnt/apps /var/www nfs defaults 0 0
+```
 
 4. Install Remi’s repository, Apache and PHP
 
@@ -201,27 +207,34 @@ To make sure the mount point will persist after reboot.
 
 Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot:
 
-        'sudo vi /etc/fstab'
+```
+sudo vi /etc/fstab
+```
 
 add following line
 
-'NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd nfs defaults 0 0'
+```
+NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd nfs defaults 0 0
+```
 
 8. Fork the tooling source code from 'Darey.io Github Account' to your Github account. You have to install git and initialise the repository before you can be able to fork.
 
-        'sudo yum install git'
+```
+sudo yum install git
 
-        'git init'
+git init
 
-        'git clone <https address of the repository you want to fork>
-
+git clone <https address of the repository you want to fork>
+```
 
 ![Fork the tooling source code](./images/forked-tooling-folder.PNG)
 
 9. Deploy the tooling website’s code to the Webserver. Ensure that the 'html folder' from the repository is deployed to '/var/www/html'. From inside the tooling folder, run this command
 
-        'sudo cp -R html/. /var/www/html'
-
+  ```
+  sudo cp -R html/. /var/www/html
+  ```
+  
 This will copy recurssively the content of the html folder that is in the tooling folder into the html folder which is in the /var/www folder
 
 ![Deploying html from repo to /var/www/html](./images/sync-tooling-var-www-html.PNG)
@@ -235,52 +248,66 @@ To make this change permanent – open following config file **sudo vi /etc/sysc
 
 Check whether aoache is up and running with this command
 
-        'sudo systemctl status httpd'
+```
+sudo systemctl status httpd
 
-        'sudo setenforce 0'
+sudo setenforce 0
 
-        'sudo vi /etc/sysconfig/selinux'
+sudo vi /etc/sysconfig/selinux
+```
 
-Set **SELINUX=disabled**cd 
+Set **SELINUX=disabled**
 
-        'sudo systemctl restart httpd'
+```
+sudo systemctl restart httpd
+```
 
 ![webserver page](./images/page.PNG)
 
 10. Update the website’s configuration to connect to the database in(/var/www/html/functions.php file).
 
-        'sudo vi /var/www/html/functions.php'
+```
+sudo vi /var/www/html/functions.php
+```
 
 update the database user = webaccess, the password = onyeka12345, the private ip address of the database
 
  Apply tooling-db.sql script to your database using this command but first install mysql client and remember to run the command from **tooling** folder and open mysql port for the database server to the private ip address of the webserver
 
-        'sudo yum install mysql'
-
-        'mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql'
+```
+sudo yum install mysql
+```
 
 ### Repeat steps 1-10 for another 2 Web Servers.
 
-### More to configure on the database
+### More to configure on the database so that the webservers caan connect to the database
 
-        'sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf'
+```
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+```
 
-        change the binding address to 0.0.0.0
+ change the binding address to 0.0.0.0
 
-        'sudo systemctl restart mysql'
+```
+sudo systemctl restart mysql
+```
+From the webserver terminal run the below command
 
+```
+mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql
+```
         
-
 11. Go back to the database terminal. Create in MySQL a new admin user with username: myuser and password: password:
 
-        'show databases;'
+```
+show databases;
 
-        'use tooling;'
+use tooling;
 
-        'show tables;'
+show tables;
 
-        'select * from users;'
-
+select * from users;
+```
 
 ![databases and tables](./images/mysql-db.PNG)
 
