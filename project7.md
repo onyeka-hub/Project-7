@@ -67,9 +67,9 @@ Make sure we set up permission that will allow our Web servers to read, write an
 
 ### Configure access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
 
-
-       `sudo vi /etc/exports`
-
+```
+   sudo vi /etc/exports
+```
 
 ```
 /mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
@@ -79,7 +79,7 @@ Make sure we set up permission that will allow our Web servers to read, write an
 
 ### Esc + :wq!
 
-        `sudo exportfs -arv`
+`sudo exportfs -arv`
 
   ![exporting the mounts](./images/exporting.PNG)  
 
