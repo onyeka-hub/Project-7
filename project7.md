@@ -105,7 +105,7 @@ Create a database and name it tooling
 
 Create a database user and name it webaccess with password 'onyeka12345'
 
-`CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345'`
+`CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';`
 
 Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
 
