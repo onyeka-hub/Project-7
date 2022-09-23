@@ -152,7 +152,7 @@ Configure the Web Servers to work with a single MySQL database
 
 add following line
 
-'<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0'
+'NFS-Server-Private-IP-Address:/mnt/apps /var/www nfs defaults 0 0'
 
 4. Install Remi’s repository, Apache and PHP
 
@@ -182,7 +182,7 @@ sudo setsebool -P httpd_execmem 1
 
 and mount it to NFS server’s export for logs with the command below
 
-'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd'
+'sudo mount -t nfs -o rw,nosuid NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd'
 
 Repeat step №4 to make sure the mount point will persist after reboot.
 
