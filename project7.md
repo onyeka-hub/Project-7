@@ -79,13 +79,17 @@ Make sure we set up permission that will allow our Web servers to read, write an
 
 ### Esc + :wq!
 
-`sudo exportfs -arv`
+```
+sudo exportfs -arv`
+```
 
-  ![exporting the mounts](./images/exporting.PNG)  
+![exporting the mounts](./images/exporting.PNG)  
 
 Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
 
-       `rpcinfo -p | grep nfs`
+```
+rpcinfo -p | grep nfs`
+```
 
 ![port number](./images/port-number.PNG)  
 
@@ -97,22 +101,29 @@ launch an ubuntu ec2 instance that will serve as db server
 
 Install MySQL server
 
-`sudo apt install mysql-server`
+```
+sudo apt install mysql-server`
+```
 
 Create a database and name it tooling
 
-`create database tooling;`
+```
+create database tooling;`
+```
 
 Create a database user and name it webaccess with password 'onyeka12345'
 
-`CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';`
+```
+CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';`
+```
 
 Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
 
-`grant all on tooling.* to 'webaccess'@'172.31.32.0/20';`
+```
+grant all on tooling.* to 'webaccess'@'172.31.32.0/20';
 
-`flush privileges;`
-
+flush privileges;
+```
 
 Remember to open the mysql port to the subnet cidr of the webservers
 ## Step 3 — Prepare the Web Servers
@@ -136,11 +147,13 @@ Configure the Web Servers to work with a single MySQL database
 
 1. Install nfs client
 
-        'sudo yum install nfs-utils nfs4-acl-tools -y'
+```
+sudo yum install nfs-utils nfs4-acl-tools -y
+```
 
 2. Mount /var/www/ and target the NFS server’s export for apps
 
-        'sudo mkdir /var/www'
+      'sudo mkdir /var/www'
 
         'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www'
 
