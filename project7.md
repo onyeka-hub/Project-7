@@ -203,7 +203,9 @@ sudo ls /var/log
 
 and mount it to NFS server’s export for logs with the command below
 
-'sudo mount -t nfs -o rw,nosuid NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd'
+```
+sudo mount -t nfs -o rw,nosuid NFS-Server-Private-IP-Address:/mnt/logs /var/log/httpd
+```
 
 To make sure the mount point will persist after reboot.
 
