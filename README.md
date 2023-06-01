@@ -98,21 +98,29 @@ launch an ubuntu ec2 instance that will serve as db server
 
 Install MySQL server
 
-`sudo apt install mysql-server`
+```
+sudo apt install mysql-server
+```
 
 Create a database and name it tooling
 
-`create database tooling;`
+```
+create database tooling;
+```
 
 Create a database user and name it webaccess with password 'onyeka12345'
 
-`CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345'`
+```
+CREATE USER 'webaccess'@'172.31.32.0/20' IDENTIFIED WITH mysql_native_password BY 'onyeka12345';
+```
 
 Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr
 
-`grant all on tooling.* to 'webaccess'@'172.31.32.0/20';`
+```
+grant all on tooling.* to 'webaccess'@'172.31.32.0/20';
 
-`flush privileges`
+flush privileges
+```
 
 
 Remember to open the mysql port to the subnet cidr of the webservers
