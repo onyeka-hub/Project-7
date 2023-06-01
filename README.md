@@ -279,7 +279,7 @@ update the database user = webaccess, the password = onyeka12345, the private ip
 ![tables in tooling](./images/mysql-db2.PNG)
 
 
-Open the website in your browser 'http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php' and make sure you can login into the webste with user = admin, password = admin
+Open the website in your browser 'http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php' and make sure you can login into the webste with user = admin, password = admin
 
 ![webserver page](./images/web-page.PNG)
 
