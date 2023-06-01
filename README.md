@@ -33,7 +33,7 @@ Mount lv-logs on /mnt/logs – To be used by webserver logs
 
 Mount lv-opt on /mnt/opt – To be used by Jenkins server in Project 8
 
-Install NFS server, configure it to start on reboot and make sure it is u and running
+Install NFS server, configure it to start on reboot and make sure it is up and running
 
 ```
     sudo yum -y update
@@ -46,7 +46,8 @@ Install NFS server, configure it to start on reboot and make sure it is u and ru
 
 ![nfs up and running](./images/nfs-server-running.PNG)
 
-Export the mounts for webservers’ subnet cidr to connect as clients. For simplicity, you will install your all three Web Servers inside the same subnet, but in production setup you would probably want to separate each tier inside its own subnet for higher level of security.
+Export the mounts for webservers’ subnet cidr to connect as clients. For simplicity, you will install all your three Web Servers inside the same subnet, but in production setup you would probably want to separate each tier inside its own subnet for higher level of security.
+
  To check your subnet cidr – open your EC2 details in AWS web console and locate ‘Networking’ tab and open a Subnet link:
 
 
@@ -152,7 +153,9 @@ Configure the Web Servers to work with a single MySQL database
 
 add following line
 
-'<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0'
+```
+<NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0
+```
 
 4. Install Remi’s repository, Apache and PHP
 
@@ -182,7 +185,7 @@ sudo setsebool -P httpd_execmem 1
 
 and mount it to NFS server’s export for logs with the command below
 
-'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd'
+        'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd'
 
 Repeat step №4 to make sure the mount point will persist after reboot.
 
@@ -206,11 +209,11 @@ This will copy recurssively the content of the html folder that is in the toolin
 
 ![Deploying html from repo to /var/www/html](./images/sync-tooling-var-www-html.PNG)
 
-### Note 1: Do not forget to open TCP port 80 on the Web Server.
+**Note 1**: Do not forget to open TCP port 80 on the Web Server.
 
-### Note 2: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux 'sudo setenforce 0'
+**Note 2**: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux 'sudo setenforce 0'
 
-To make this change permanent – open following config file **sudo vi /etc/sysconfig/selinux** and set **SELINUX=disabled** then restrt httpd.
+To make this change permanent – open following config file **sudo vi /etc/sysconfig/selinux** and set **SELINUX=disabled** then restart httpd.
 ### Trouble shooting
 
 Check whether apache is up and running with this command
@@ -268,7 +271,7 @@ update the database user = webaccess, the password = onyeka12345, the private ip
 ![tables in tooling](./images/mysql-db2.PNG)
 
 
-Open the website in your browser http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php and make sure you can login into the webste with user = admin, password = admin
+Open the website in your browser 'http://<Web-Server-Public-IP-Address-or-Public-DNS-Name>/index.php' and make sure you can login into the webste with user = admin, password = admin
 
 ![webserver page](./images/web-page.PNG)
 
