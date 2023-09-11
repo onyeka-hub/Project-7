@@ -69,7 +69,7 @@ Make sure we set up permission that will allow our Web servers to read, write an
 ### Configure access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
 
 
-       `sudo vi /etc/exports`
+`sudo vi /etc/exports`
 
 
 ```
@@ -80,13 +80,13 @@ Make sure we set up permission that will allow our Web servers to read, write an
 
 ### Esc + :wq!
 
-        `sudo exportfs -arv`
+`sudo exportfs -arv`
 
   ![exporting the mounts](./images/exporting.PNG)  
 
 Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
 
-       `rpcinfo -p | grep nfs`
+`rpcinfo -p | grep nfs`
 
 ![port number](./images/port-number.PNG)  
 
@@ -145,19 +145,20 @@ Configure the Web Servers to work with a single MySQL database
 
 1. Install nfs client
 
-        'sudo yum install nfs-utils nfs4-acl-tools -y'
+`sudo yum install nfs-utils nfs4-acl-tools -y`
 
 2. Mount /var/www/ and target the NFS server’s export for apps
 
-        'sudo mkdir /var/www'
-
-        'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www'
+```
+sudo mkdir /var/www
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+```
 
 ![nfs /mnt/apps mounte on webservers /var/www](./images/nfs-mounted-on-var-www.PNG)  
 
 3. Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot:
 
-        'sudo vi /etc/fstab'
+`sudo vi /etc/fstab`
 
 add following line
 
@@ -187,31 +188,32 @@ sudo setsebool -P httpd_execmem 1
 
 7. Locate the log folder for Apache on the Web Server 
 
-        'sudo ls /var/log'
+`sudo ls /var/log`
 
 ![locating the log folder for apache on the web server](./images/webserver-log-httpd.PNG)
 
 and mount it to NFS server’s export for logs with the command below
 
-        'sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd'
+`sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd`
 
 Repeat step №4 to make sure the mount point will persist after reboot.
 
 8. Fork the tooling source code from 'Darey.io Github Account' to your Github account. You have to install git and initialise the repository before you can be able to fork.
 
-        'sudo yum install git'
-
-        'git init'
-
-        'git clone <https address of the repository you want to fork>
-
+```
+sudo yum install git
+git init
+git clone <https address of the repository you want to fork>
+```
 
 ![Fork the tooling source code](./images/forked-tooling-folder.PNG)
 
 9. Deploy the tooling website’s code to the Webserver. Ensure that the 'html folder' from the repository is deployed to '/var/www/html'. 
 From inside the tooling folder, run this command
 
-        'sudo cp -R html/. /var/www/html'
+```
+sudo cp -R html/. /var/www/html
+```
 
 This will copy recurssively the content of the html folder that is in the tooling folder into the html folder which is in the /var/www folder
 
@@ -219,59 +221,72 @@ This will copy recurssively the content of the html folder that is in the toolin
 
 **Note 1**: Do not forget to open TCP port 80 on the Web Server.
 
-**Note 2**: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux 'sudo setenforce 0'
+**Note 2**: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux 
+```
+sestatus
+sudo setenforce 0
+```
+
+To make the change persistent across reboots, you can edit the SELinux configuration file. Open the SELinux configuration file for editing at /etc/selinux/config and after do : sudo reboot
+
+To completely disable SELinux, you can set SELINUX=disabled
 
 To make this change permanent – open following config file **sudo vi /etc/sysconfig/selinux** and set **SELINUX=disabled** then restart httpd.
+
+
 ### Trouble shooting
 
 Check whether apache is up and running with this command
+```
+sudo systemctl status httpd
+sestatus
+sudo setenforce 0
+sudo vi /etc/sysconfig/selinux
+```
+        
+Set **SELINUX=disabled**
 
-        'sudo systemctl status httpd'
-
-        'sudo setenforce 0'
-
-        'sudo vi /etc/sysconfig/selinux'
-
-Set **SELINUX=disabled**cd 
-
-        'sudo systemctl restart httpd'
+```
+sudo systemctl restart httpd
+```
 
 ![webserver page](./images/page.PNG)
 
 10. Update the website’s configuration to connect to the database in(/var/www/html/functions.php file).
 
-        'sudo vi /var/www/html/functions.php'
+```
+sudo vi /var/www/html/functions.php
+```
 
 update the database user = webaccess, the password = onyeka12345, the private ip address of the database
 
  Apply tooling-db.sql script to your database using this command but first install mysql client and remember to run the command from **tooling** folder and open mysql port for the database server to the private ip address of the webserver
 
-        'sudo yum install mysql'
-
-        'mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql'
+```
+sudo yum install mysql
+mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-db.sql
+```
 
 ### Repeat steps 1-10 for another 2 Web Servers.
 
 ### More to configure on the database
 
-        'sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf'
+`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
 
-        change the binding address to 0.0.0.0
+Change the binding address to 0.0.0.0
 
-        'sudo systemctl restart mysql'
+`sudo systemctl restart mysql`
 
         
 
 11. Go back to the database terminal. Create in MySQL a new admin user with username: myuser and password: password:
 
-        'show databases;'
-
-        'use tooling;'
-
-        'show tables;'
-
-        'select * from users;'
-
+```
+show databases;
+use tooling;
+show tables;
+select * from users;
+```
 
 ![databases and tables](./images/mysql-db.PNG)
 
