@@ -1,10 +1,11 @@
-## PROJECT 7
+# PROJECT 7 : Devops Tooling Website Solution
+
 ### In this project you will implement a solution that consists of following components:
 
 1. Infrastructure: AWS
-1. Webserver Linux: Red Hat Enterprise Linux 8
-2. Database Server: Ubuntu 20.04 + MySQL
-3. Storage Server: Red Hat Enterprise Linux 8 + NFS Server
+1. Webserver Linux: 3 Red Hat Enterprise Linux 8
+2. Database Server: Ubuntu 20.04 - MySQL
+3. Storage Server: Red Hat Enterprise Linux 8 - NFS Server
 4. Programming Language: PHP
 5. Code Repository: GitHub
 
@@ -13,7 +14,7 @@ On the diagram below you can see a common pattern where several stateless Web Se
 
 ![project design](./images/architecture.PNG)
 
-### STEP 1 – PREPARE NFS SERVER
+## STEP 1 – PREPARE NFS SERVER
 
 
 Spin up a new EC2 instance with RHEL Linux 8 Operating System.
@@ -196,7 +197,7 @@ and mount it to NFS server’s export for logs with the command below
 
 `sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd`
 
-Repeat step №4 to make sure the mount point will persist after reboot.
+Repeat step №3 to make sure the mount point will persist after reboot.
 
 8. Fork the tooling source code from 'Darey.io Github Account' to your Github account. You have to install git and initialise the repository before you can be able to fork.
 
@@ -292,6 +293,9 @@ select * from users;
 
 
 ![tables in tooling](./images/mysql-db2.PNG)
+
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `user_type`, `status`) VALUES (1, 'myuser', '5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', '1');
 
 
 Open the website in your browser 'http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php' and make sure you can login into the webste with user = admin, password = admin
