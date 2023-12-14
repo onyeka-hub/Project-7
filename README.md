@@ -37,11 +37,11 @@ Mount lv-opt on /mnt/opt – To be used by Jenkins server in Project 8
 Install NFS server, configure it to start on reboot and make sure it is up and running
 
 ```
-    sudo yum -y update
-    sudo yum install nfs-utils -y
-    sudo systemctl start nfs-server.service
-    sudo systemctl enable nfs-server.service
-    sudo systemctl status nfs-server.service
+sudo yum -y update
+sudo yum install nfs-utils -y
+sudo systemctl start nfs-server.service
+sudo systemctl enable nfs-server.service
+sudo systemctl status nfs-server.service
 
 ```
 
@@ -49,29 +49,30 @@ Install NFS server, configure it to start on reboot and make sure it is up and r
 
 Export the mounts for webservers’ subnet cidr to connect as clients. For simplicity, you will install all your three Web Servers inside the same subnet, but in production setup you would probably want to separate each tier inside its own subnet for higher level of security.
 
- To check your subnet cidr – open your EC2 details in AWS web console and locate ‘Networking’ tab and open a Subnet link:
+To check your subnet cidr – open your EC2 details in AWS web console and locate ‘Networking’ tab and open a Subnet link:
 
 
 Make sure we set up permission that will allow our Web servers to read, write and execute files on NFS:
 
 ```
-    sudo chown -R nobody: /mnt/apps
-    sudo chown -R nobody: /mnt/logs
-    sudo chown -R nobody: /mnt/opt
+sudo chown -R nobody: /mnt/apps
+sudo chown -R nobody: /mnt/logs
+sudo chown -R nobody: /mnt/opt
 
-    sudo chmod -R 777 /mnt/apps
-    sudo chmod -R 777 /mnt/logs
-    sudo chmod -R 777 /mnt/opt
+sudo chmod -R 777 /mnt/apps
+sudo chmod -R 777 /mnt/logs
+sudo chmod -R 777 /mnt/opt
 
-    sudo systemctl restart nfs-server.service
+sudo systemctl restart nfs-server.service
 
 ```
 
 ### Configure access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
 
 
-`sudo vi /etc/exports`
-
+```
+sudo vi /etc/exports
+```
 
 ```
 /mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
@@ -81,13 +82,17 @@ Make sure we set up permission that will allow our Web servers to read, write an
 
 ### Esc + :wq!
 
-`sudo exportfs -arv`
+```
+sudo exportfs -arv
+```
 
-  ![exporting the mounts](./images/exporting.PNG)  
+![exporting the mounts](./images/exporting.PNG)  
 
 Check which port is used by NFS and open it using Security Groups (add new Inbound Rule)
 
-`rpcinfo -p | grep nfs`
+```
+rpcinfo -p | grep nfs
+```
 
 ![port number](./images/port-number.PNG)  
 
@@ -146,7 +151,9 @@ Configure the Web Servers to work with a single MySQL database
 
 1. Install nfs client
 
-`sudo yum install nfs-utils nfs4-acl-tools -y`
+```
+sudo yum install nfs-utils nfs4-acl-tools -y
+```
 
 2. Mount /var/www/ and target the NFS server’s export for apps
 
@@ -159,7 +166,9 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/ww
 
 3. Verify that NFS was mounted successfully by running df -h. Make sure that the changes will persist on Web Server after reboot:
 
-`sudo vi /etc/fstab`
+```
+sudo vi /etc/fstab
+```
 
 add following line
 
@@ -189,13 +198,17 @@ sudo setsebool -P httpd_execmem 1
 
 7. Locate the log folder for Apache on the Web Server 
 
-`sudo ls /var/log`
+```
+sudo ls /var/log
+```
 
 ![locating the log folder for apache on the web server](./images/webserver-log-httpd.PNG)
 
 and mount it to NFS server’s export for logs with the command below
 
-`sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd`
+```
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd
+```
 
 Repeat step №3 to make sure the mount point will persist after reboot.
 
@@ -259,9 +272,9 @@ sudo systemctl restart httpd
 sudo vi /var/www/html/functions.php
 ```
 
-update the database user = webaccess, the password = onyeka12345, the private ip address of the database
+Update the database user = webaccess, the password = onyeka12345, the private ip address of the database
 
- Apply tooling-db.sql script to your database using this command but first install mysql client and remember to run the command from **tooling** folder and open mysql port for the database server to the private ip address of the webserver
+Apply tooling-db.sql script to your database using this command but first install mysql client and remember to run the command from **tooling** folder and open mysql port for the database server to the private ip address of the webserver
 
 ```
 sudo yum install mysql
@@ -272,13 +285,15 @@ mysql -h <private ip of the database server> -u webaccess -p tooling < tooling-d
 
 ### More to configure on the database
 
-`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
+```
+sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+```
 
 Change the binding address to 0.0.0.0
 
-`sudo systemctl restart mysql`
-
-        
+```
+sudo systemctl restart mysql
+```
 
 11. Go back to the database terminal. Create in MySQL a new admin user with username: myuser and password: password:
 
