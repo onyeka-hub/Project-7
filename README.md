@@ -3,9 +3,9 @@
 ### In this project you will implement a solution that consists of following components:
 
 1. Infrastructure: AWS
-1. Webserver Linux: 3 Red Hat Enterprise Linux 8
+1. Webserver Linux: 3 Red Hat Enterprise Linux 8 (RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2)
 2. Database Server: Ubuntu 20.04 - MySQL
-3. Storage Server: Red Hat Enterprise Linux 8 - NFS Server
+3. Storage Server: Red Hat Enterprise Linux 8 - NFS Server (RHEL-8.6.0_HVM-20220503-x86_64-2-Hourly2-GP2)
 4. Programming Language: PHP
 5. Code Repository: GitHub
 
@@ -67,7 +67,7 @@ sudo systemctl restart nfs-server.service
 
 ```
 
-### Configure access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
+### Configure access to NFS for clients within the same subnet. The nfs and the webservers should have the same subnet cidr (example of Subnet CIDR – 172.31.32.0/20 )
 
 
 ```
